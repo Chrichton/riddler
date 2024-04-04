@@ -350,4 +350,7 @@ defmodule Riddler.Accounts do
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+  def admin?(nil), do: false
+  def admin?(%{email: email} = _user), do: email in ["dante@inferno.com"]
 end
