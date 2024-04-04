@@ -68,6 +68,13 @@ defmodule RiddlerWeb.Router do
       on_mount: [{RiddlerWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      live "/puzzles", PuzzleLive.Index, :index
+      live "/puzzles/new", PuzzleLive.Index, :new
+      live "/puzzles/:id/edit", PuzzleLive.Index, :edit
+
+      live "/puzzles/:id", PuzzleLive.Show, :show
+      live "/puzzles/:id/show/edit", PuzzleLive.Show, :edit
     end
   end
 
