@@ -71,7 +71,7 @@ defmodule RiddlerWeb.Router do
     end
   end
 
-  scope "/", RiddlerWeb do
+  scope "/admin", RiddlerWeb do
     pipe_through [:browser, :require_authenticated_user, :require_admin_user]
 
     live_session :require_admin_user,

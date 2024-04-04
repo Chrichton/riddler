@@ -1,7 +1,7 @@
 <.header>
   Listing Puzzles
   <:actions>
-    <.link patch={~p"/puzzles/new"}>
+    <.link patch={~p"/admin/puzzles/new"}>
       <.button>New Puzzle</.button>
     </.link>
   </:actions>
@@ -10,16 +10,16 @@
 <.table
   id="puzzles"
   rows={@streams.puzzles}
-  row_click={fn {_id, puzzle} -> JS.navigate(~p"/puzzles/#{puzzle}") end}
+  row_click={fn {_id, puzzle} -> JS.navigate(~p"/admin/puzzles/#{puzzle}") end}
 >
   <:col :let={{_id, puzzle}} label="Name"><%= puzzle.name %></:col>
   <:col :let={{_id, puzzle}} label="Height"><%= puzzle.height %></:col>
   <:col :let={{_id, puzzle}} label="Width"><%= puzzle.width %></:col>
   <:action :let={{_id, puzzle}}>
     <div class="sr-only">
-      <.link navigate={~p"/puzzles/#{puzzle}"}>Show</.link>
+      <.link navigate={~p"/admin/puzzles/#{puzzle}"}>Show</.link>
     </div>
-    <.link patch={~p"/puzzles/#{puzzle}/edit"}>Edit</.link>
+    <.link patch={~p"/admin/puzzles/#{puzzle}/edit"}>Edit</.link>
   </:action>
   <:action :let={{id, puzzle}}>
     <.link
@@ -31,13 +31,18 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="puzzle-modal" show on_cancel={JS.patch(~p"/puzzles")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="puzzle-modal"
+  show
+  on_cancel={JS.patch(~p"/admin/puzzles")}
+>
   <.live_component
     module={RiddlerWeb.PuzzleLive.FormComponent}
     id={@puzzle.id || :new}
     title={@page_title}
     action={@live_action}
     puzzle={@puzzle}
-    patch={~p"/puzzles"}
+    patch={~p"/admin/puzzles"}
   />
 </.modal>
