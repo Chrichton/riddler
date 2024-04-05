@@ -1,6 +1,5 @@
 <.header>
-  Puzzle <%= @puzzle.id %>
-  <:subtitle>This is a puzzle record from your database.</:subtitle>
+  <%= @puzzle.name %> (<%= @puzzle.height %>, <%= @puzzle.width %>)
   <:actions>
     <.link patch={~p"/admin/puzzles/#{@puzzle}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit puzzle</.button>
@@ -8,12 +7,15 @@
   </:actions>
 </.header>
 
-<.list>
-  <:item title="Name"><%= @puzzle.name %></:item>
-  <:item title="Height"><%= @puzzle.height %></:item>
-  <:item title="Width"><%= @puzzle.width %></:item>
-</.list>
+<hr />
 
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <%= for x <- 0..19, y <- 0..19 do %>
+    <.rect x={x} y={y} />
+  <% end %>
+</svg>
+
+<hr />
 <.back navigate={~p"/admin/puzzles"}>Back to puzzles</.back>
 
 <.modal
