@@ -20,6 +20,11 @@ defmodule RiddlerWeb.PuzzleLive.Index do
     |> assign(:puzzle, Game.get_puzzle!(id))
   end
 
+  defp apply_action(socket, :points, %{"id" => id}) do
+    socket
+    |> assign(:puzzle, Game.get_puzzle!(id))
+  end
+
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Puzzle")

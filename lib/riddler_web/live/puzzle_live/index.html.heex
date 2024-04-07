@@ -21,6 +21,9 @@
     </div>
     <.link patch={~p"/admin/puzzles/#{puzzle}/edit"}>Edit</.link>
   </:action>
+  <:action :let={{_id, puzzle}}>
+    <.link patch={~p"/admin/puzzles/#{puzzle}/points"}>Points</.link>
+  </:action>
   <:action :let={{id, puzzle}}>
     <.link
       phx-click={JS.push("delete", value: %{id: puzzle.id}) |> hide("##{id}")}
@@ -44,5 +47,19 @@
     action={@live_action}
     puzzle={@puzzle}
     patch={~p"/admin/puzzles"}
+  />
+</.modal>
+
+<.modal
+  :if={@live_action == :points}
+  id="puzzle-points"
+  show
+  on_cancel={JS.patch(~p"/admin/puzzles")}
+>
+  <.live_component
+    module={RiddlerWeb.PuzzleLive.Points}
+    id={@puzzle.id}
+    puzzle={@puzzle}
+    patch={~p"/admin/puzzles/#{@puzzle}"}
   />
 </.modal>
