@@ -85,6 +85,7 @@ defmodule RiddlerWeb.Router do
 
       live "/puzzles/:id", PuzzleLive.Show, :show
       live "/puzzles/:id/show/edit", PuzzleLive.Show, :edit
+      live "/puzzles/:id/show/points", PuzzleLive.Show, :points
     end
   end
 

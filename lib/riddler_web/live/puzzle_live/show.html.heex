@@ -7,15 +7,6 @@
   </:actions>
 </.header>
 
-<hr />
-
-<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <%= for x <- 0..19, y <- 0..19 do %>
-    <.rect x={x} y={y} />
-  <% end %>
-</svg>
-
-<hr />
 <.back navigate={~p"/admin/puzzles"}>Back to puzzles</.back>
 
 <.modal
@@ -29,6 +20,20 @@
     id={@puzzle.id}
     title={@page_title}
     action={@live_action}
+    puzzle={@puzzle}
+    patch={~p"/admin/puzzles/#{@puzzle}"}
+  />
+</.modal>
+
+<.modal
+  :if={@live_action == :points}
+  id="points-modal"
+  show
+  on_cancel={JS.patch(~p"/admin/puzzles/#{@puzzle}")}
+>
+  <.live_component
+    module={RiddlerWeb.PuzzleLive.Points}
+    id={@puzzle.id}
     puzzle={@puzzle}
     patch={~p"/admin/puzzles/#{@puzzle}"}
   />
