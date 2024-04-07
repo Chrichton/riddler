@@ -13,8 +13,7 @@
   row_click={fn {_id, puzzle} -> JS.navigate(~p"/admin/puzzles/#{puzzle}") end}
 >
   <:col :let={{_id, puzzle}} label="Name"><%= puzzle.name %></:col>
-  <:col :let={{_id, puzzle}} label="Height"><%= puzzle.height %></:col>
-  <:col :let={{_id, puzzle}} label="Width"><%= puzzle.width %></:col>
+  <:col :let={{_id, puzzle}} label="Dimensions">(<%= puzzle.height %>, <%= puzzle.width %>)</:col>
   <:action :let={{_id, puzzle}}>
     <div class="sr-only">
       <.link navigate={~p"/admin/puzzles/#{puzzle}"}>Show</.link>

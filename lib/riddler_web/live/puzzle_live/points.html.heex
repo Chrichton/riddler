@@ -1,5 +1,9 @@
-<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <%= for x <- 0..19, y <- 0..19 do %>
-    <.rect x={x} y={y} myself={@myself} alive={Map.get(@grid, {x, y}, false)} />
-  <% end %>
-</svg>
+<div>
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <%= for x <- 0..19, y <- 0..19 do %>
+      <.rect x={x} y={y} myself={@myself} alive={Map.get(@grid, {x, y}, false)} />
+    <% end %>
+  </svg>
+  <.button phx-click="toggle" phx-confirm="Are you sure">Toggle</.button>
+  <.button phx-click="save" phx-confirm="Are you sure">Save</.button>
+</div>
