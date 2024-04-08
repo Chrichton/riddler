@@ -40,7 +40,6 @@ defmodule Riddler.Game do
   def get_puzzle!(id) do
     Repo.get!(Puzzle, id)
     |> Repo.preload([:points])
-    |> IO.inspect()
   end
 
   @doc """

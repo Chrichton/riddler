@@ -1,4 +1,5 @@
 defmodule RiddlerWeb.PuzzleLive.Points do
+  alias Riddler.Game
   use RiddlerWeb, :live_component
 
   @impl true
@@ -14,10 +15,32 @@ defmodule RiddlerWeb.PuzzleLive.Points do
     {:noreply, change_cell(socket, x, y)}
   end
 
+  @impl true
+  def handle_event("save", _params, socket) do
+    {:noreply, save(socket)}
+  end
+
+  defp save(socket) do
+    points =
+      socket.assigns.grid
+      |> Enum.filter(fn {_point, alive} -> alive end)
+      |> Enum.map(fn {point, _alive} -> point end)
+
+    puzzle = socket.assigns.puzzle
+
+    Game.save_puzzle_points(puzzle, points)
+
+    socket
+    |> put_flash(:info, "Points saved successfully")
+    |> push_patch(to: socket.assigns.patch)
+  end
+
   defp assign_grid(socket, puzzle) do
+    points = Enum.map(puzzle.points, &{&1.x, &1.y})
+
     grid =
       for x <- 1..puzzle.width, y <- 1..puzzle.height, into: %{} do
-        {{x, y}, false}
+        {{x, y}, {x, y} in points}
       end
 
     assign(socket, :grid, grid)
