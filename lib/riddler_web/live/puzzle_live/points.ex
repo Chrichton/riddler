@@ -20,19 +20,9 @@ defmodule RiddlerWeb.PuzzleLive.Points do
     {:noreply, save(socket)}
   end
 
-  defp save(socket) do
-    points =
-      socket.assigns.grid
-      |> Enum.filter(fn {_point, alive} -> alive end)
-      |> Enum.map(fn {point, _alive} -> point end)
-
-    puzzle = socket.assigns.puzzle
-
-    Game.save_puzzle_points(puzzle, points)
-
-    socket
-    |> put_flash(:info, "Points saved successfully")
-    |> push_patch(to: socket.assigns.patch)
+  @impl true
+  def handle_event("toggle", _params, socket) do
+    {:noreply, toggle(socket)}
   end
 
   defp assign_grid(socket, puzzle) do
@@ -56,6 +46,30 @@ defmodule RiddlerWeb.PuzzleLive.Points do
     assign(socket, :grid, new_grid)
   end
 
+  defp save(socket) do
+    points =
+      socket.assigns.grid
+      |> Enum.filter(fn {_point, alive} -> alive end)
+      |> Enum.map(fn {point, _alive} -> point end)
+
+    puzzle = socket.assigns.puzzle
+
+    Game.save_puzzle_points(puzzle, points)
+
+    socket
+    |> put_flash(:info, "Points saved successfully")
+    |> push_patch(to: socket.assigns.patch)
+  end
+
+  defp toggle(socket) do
+    new_grid =
+      socket.assigns.grid
+      |> Enum.map(fn {point, alive} -> {point, not alive} end)
+      |> Map.new()
+
+    assign(socket, :grid, new_grid)
+  end
+
   attr :myself, :any, required: true
   attr :x, :integer, required: true
   attr :y, :integer, required: true
@@ -74,18 +88,11 @@ defmodule RiddlerWeb.PuzzleLive.Points do
       phx-value-y={@y}
       phx-target={@myself}
       fill={fill_color(@alive)}
-      class={hover_class(@alive)}
+      class="hover:opacity-60"
     />
     """
   end
 
   defp fill_color(true), do: "black"
   defp fill_color(false), do: "white"
-
-  defp hover_class(alive) do
-    "hover:fill-slate-#{hower_amount(alive)}"
-  end
-
-  defp hower_amount(true), do: 400
-  defp hower_amount(false), do: 200
 end

@@ -1,5 +1,13 @@
 <div>
-  <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+  <svg viewBox={"0 0 220 #{@puzzle.height * 10 + 10}"} xmlns="http://www.w3.org/2000/svg">
+    <rect
+      x={10}
+      y={10}
+      height={@puzzle.height * 10}
+      width={@puzzle.width * 10}
+      fill="cornflowerblue"
+      rect
+    />
     <%= for x <- 1..@puzzle.width, y <- 1..@puzzle.height do %>
       <.rect x={x} y={y} myself={@myself} alive={Map.get(@grid, {x, y}, false)} />
     <% end %>
