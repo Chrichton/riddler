@@ -57,6 +57,7 @@ defmodule Riddler.Game do
   def create_puzzle(attrs \\ %{}) do
     %Puzzle{}
     |> Puzzle.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
