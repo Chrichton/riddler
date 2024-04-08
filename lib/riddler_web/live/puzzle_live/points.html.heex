@@ -12,6 +12,6 @@
       <.rect x={x} y={y} myself={@myself} alive={Map.get(@grid, {x, y}, false)} />
     <% end %>
   </svg>
-  <.button phx-click="toggle" phx-target={@myself} phx-confirm="Are you sure">Toggle</.button>
-  <.button phx-click="save" phx-target={@myself} phx-confirm="Are you sure">Save</.button>
+  <.button phx-click="toggle" phx-target={@myself}>Toggle</.button>
+  <.button phx-click="save" phx-target={@myself} data-confirm="Are you sure">Save</.button>
 </div>
