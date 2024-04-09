@@ -6,6 +6,7 @@ defmodule RiddlerWeb.PuzzleLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    Game.subscribe_puzzle_changed()
     {:ok, stream(socket, :puzzles, Game.list_puzzles())}
   end
 

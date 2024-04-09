@@ -9,6 +9,7 @@ defmodule Riddler.Game do
   alias Ecto.Multi
   alias Riddler.Repo
   alias Riddler.Game.{Puzzle, Point}
+  alias Phoenix.PubSub
 
   @doc """
   Returns the list of puzzles.
@@ -120,9 +121,25 @@ defmodule Riddler.Game do
         end
       )
 
-    Multi.new()
-    |> Multi.delete_all(:points, Ecto.assoc(puzzle, :points))
-    |> Multi.insert_all(:insert_points, Point, new_points)
-    |> Repo.transaction()
+    result =
+      Multi.new()
+      |> Multi.delete_all(:points, Ecto.assoc(puzzle, :points))
+      |> Multi.insert_all(:insert_points, Point, new_points)
+      |> Repo.transaction()
+
+    broadcast_puzzle_changed(puzzle)
+
+    result
+  end
+
+  @pubsub Riddler.PubSub
+  @points_changed_topic "points_changed"
+
+  def broadcast_puzzle_changed(puzzle) do
+    PubSub.broadcast(@pubsub, @points_changed_topic, {:points_changed, puzzle.points})
+  end
+
+  def subscribe_puzzle_changed() do
+    PubSub.subscribe(@pubsub, @points_changed_topic)
   end
 end
