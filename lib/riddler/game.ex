@@ -136,7 +136,7 @@ defmodule Riddler.Game do
   @points_changed_topic "points_changed"
 
   def broadcast_puzzle_changed(puzzle) do
-    PubSub.broadcast(@pubsub, @points_changed_topic, {:points_changed, puzzle.points})
+    PubSub.broadcast(@pubsub, @points_changed_topic, {:points_changed, puzzle.id})
   end
 
   def subscribe_puzzle_changed() do

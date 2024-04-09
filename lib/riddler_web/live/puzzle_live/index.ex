@@ -15,15 +15,41 @@ defmodule RiddlerWeb.PuzzleLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
+  @impl true
+  def handle_info({RiddlerWeb.PuzzleLive.FormComponent, {:saved, puzzle}}, socket) do
+    {:noreply, stream_insert(socket, :puzzles, puzzle)}
+  end
+
+  @impl true
+  def handle_info(
+        {:points_changed, id},
+        %{assigns: %{puzzle: %{id: id}}} = socket
+      ) do
+    {:noreply, load_points(socket, id)}
+  end
+
+  @impl true
+  def handle_info(:points_changed, socket) do
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    puzzle = Game.get_puzzle!(id)
+    {:ok, _} = Game.delete_puzzle(puzzle)
+
+    {:noreply, stream_delete(socket, :puzzles, puzzle)}
+  end
+
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Puzzle")
-    |> assign(:puzzle, Game.get_puzzle!(id))
+    |> load_points(id)
   end
 
   defp apply_action(socket, :points, %{"id" => id}) do
     socket
-    |> assign(:puzzle, Game.get_puzzle!(id))
+    |> load_points(id)
   end
 
   defp apply_action(socket, :new, _params) do
@@ -38,16 +64,7 @@ defmodule RiddlerWeb.PuzzleLive.Index do
     |> assign(:puzzle, nil)
   end
 
-  @impl true
-  def handle_info({RiddlerWeb.PuzzleLive.FormComponent, {:saved, puzzle}}, socket) do
-    {:noreply, stream_insert(socket, :puzzles, puzzle)}
-  end
-
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    puzzle = Game.get_puzzle!(id)
-    {:ok, _} = Game.delete_puzzle(puzzle)
-
-    {:noreply, stream_delete(socket, :puzzles, puzzle)}
+  defp load_points(socket, id) do
+    assign(socket, :puzzle, Game.get_puzzle!(id))
   end
 end
