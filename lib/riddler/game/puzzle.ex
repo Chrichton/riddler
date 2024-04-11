@@ -8,7 +8,7 @@ defmodule Riddler.Game.Puzzle do
     field :name, :string
     field :width, :integer
     field :height, :integer
-    has_many :points, Point
+    has_many :points, Point, on_replace: :delete_if_exists
 
     timestamps(type: :utc_datetime)
   end
@@ -18,5 +18,6 @@ defmodule Riddler.Game.Puzzle do
     puzzle
     |> cast(attrs, [:name, :height, :width])
     |> validate_required([:name, :height, :width])
+    |> cast_assoc(:points)
   end
 end

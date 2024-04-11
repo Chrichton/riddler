@@ -5,10 +5,10 @@ defmodule Riddler.Game do
 
   import Ecto.Query, warn: false
 
-  alias Postgrex.Extensions.Point
-  alias Ecto.Multi
+  # alias Ecto.Multi
   alias Riddler.Repo
-  alias Riddler.Game.{Puzzle, Point}
+  # alias Riddler.Game.{Puzzle, Point}
+  alias Riddler.Game.Puzzle
   alias Phoenix.PubSub
 
   @doc """
@@ -109,23 +109,30 @@ defmodule Riddler.Game do
   end
 
   def save_puzzle_points(puzzle, points) do
-    dt =
-      DateTime.utc_now()
-      |> DateTime.truncate(:second)
-
-    new_points =
-      Enum.map(
-        points,
-        fn {x, y} ->
-          %{x: x, y: y, puzzle_id: puzzle.id, inserted_at: dt, updated_at: dt}
-        end
-      )
+    points_params =
+      Enum.map(points, fn {x, y} -> %{x: x, y: y} end)
 
     result =
-      Multi.new()
-      |> Multi.delete_all(:points, Ecto.assoc(puzzle, :points))
-      |> Multi.insert_all(:insert_points, Point, new_points)
-      |> Repo.transaction()
+      change_puzzle(puzzle, %{points: points_params})
+      |> Repo.update()
+
+    # dt =
+    #   DateTime.utc_now()
+    #   |> DateTime.truncate(:second)
+
+    # new_points =
+    #   Enum.map(
+    #     points,
+    #     fn {x, y} ->
+    #       %{x: x, y: y, puzzle_id: puzzle.id, inserted_at: dt, updated_at: dt}
+    #     end
+    #   )
+
+    # result =
+    #   Multi.new()
+    #   |> Multi.delete_all(:points, Ecto.assoc(puzzle, :points))
+    #   |> Multi.insert_all(:insert_points, Point, new_points)
+    #   |> Repo.transaction()
 
     broadcast_puzzle_changed(puzzle)
 
