@@ -13,5 +13,12 @@
     <% end %>
   </svg>
   <.button phx-click="toggle" phx-target={@myself}>Toggle</.button>
-  <.button phx-click="save" phx-target={@myself} data-confirm="Are you sure">Save</.button>
+  <.button
+    phx-click="save"
+    phx-target={@myself}
+    data-confirm="Are you sure"
+    phx-disable-with="Saving..."
+  >
+    Save
+  </.button>
 </div>
